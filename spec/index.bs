@@ -86,12 +86,14 @@ spec: WebIDL; urlPrefix: https://heycam.github.io/webidl/#
 
   <em>This section is non-normative.</em>
 
-  Web Applications often run in environments with unreliable networks (e.g., mobile phones) and unknown lifetimes (the browser might be killed or the user might navigate away). This makes it difficult to synchronize client data from web apps (such as photo uploads, document changes, or composed emails) with servers. If the browser closes or the user navigates away before synchronization can complete, the app must wait until the user revisits the page to try again. This specification provides a new onsync <a>service worker</a> event which can fire <a>in the background</a> so that synchronization attempts can continue despite adverse conditions when initially requested. This API is intended to reduce the time between content creation and content synchronization with the server.
+  Web Applications often run in environments with unreliable networks (e.g., mobile phones) and unknown lifetimes (the browser might be killed or the user might navigate away). This makes it difficult to synchronize client data from web apps (such as photo uploads, document changes, or composed emails) with servers. It also makes it difficult to synchronize updated content on the servers with the web app. If the browser closes or the user navigates away before synchronization can complete, the app must wait until the user revisits the page to try again. This specification provides new onsync and onperiodicsync <a>service worker</a> events which can fire <a>in the background</a> so that synchronization attempts can continue despite adverse conditions when initially requested. This API is intended to reduce the time between content creation and content synchronization between the server and the web app.
+
+  Two types of synchronizations are introduced: one-shot, which provides a one-off synchronization opportunity, and periodic, which periodically provides synchronization opportunities.
 
   As this API relies on service workers, functionality provided by this API is only available in a <a>secure context</a>.
 
   <div class="example">
-    Requesting a background sync opportunity from a <a>browsing context</a>:
+    Requesting a <a>one-shot Background Sync opportunity</a> from a <a>browsing context</a>:
 
     <pre class="lang-js">
       function sendChatMessage(message) {
@@ -139,6 +141,27 @@ spec: WebIDL; urlPrefix: https://heycam.github.io/webidl/#
     </pre>
 
     In the above example <code>getMessagesFromOutbox</code> and <code>removeMessagesFromOutbox</code> are developer-defined functions.
+
+    Requesting a <a>periodic Background Sync opportunity</a> at 60 second intervals from a <a>browsing context</a>:
+
+    <pre class="lang-js">
+      function getLatestNews() {
+        navigator.serviceWorker.ready
+            .then(reg => reg.periodicSync.register('get-latest-news', { minInterval: 60000 }))
+            .then(() => console.log('Periodic Sync registered!'))
+            .catch(() => console.log('Periodic Sync registered!'));
+      }
+    </pre>
+
+    Reacting to a periodicsync event within a <a>service worker</a>:
+
+    <pre class="lang-js">
+      self.addEventListener('periodicsync', event => {
+        event.waitUntil(fetchAndCacheLatestNews());
+      });
+    </pre>
+
+    In the above example <code>fetchAndCacheLatestNews</code> is a developer-defined function.
   </div>
 </section>
 
@@ -148,11 +171,15 @@ spec: WebIDL; urlPrefix: https://heycam.github.io/webidl/#
   The sync event is considered to run <dfn>in the background</dfn> if no <a>service worker clients</a> whose <a>frame type</a> is top-level or auxiliary exist for the origin of the corresponding service worker registration.
 
   The user agent is considered to be <dfn>online</dfn> if the user agent has established a network connection. A user agent MAY use a stricter definition of being <a>online</a>. Such a stricter definition MAY take into account the particular <a>service worker</a> or origin a <a>sync registration</a> is associated with.
+
+  A <dfn>one-shot Background Sync opportunity</dfn> allows one-off synchronization between the server and the web app, and can be requested via a <a>sync registration</a>.
+  
+  A <dfn>periodic Background Sync opportunity</dfn> allows periodic synchronization between the server and the web app, the exact frequency of which is decided by the user agent. It can be requested via a <a>periodic sync registration</a>.
 </section>
 
 <section>
   <h2 id="constructs">Constructs</h2>
-  A <a>service worker registration</a> has an associated <dfn>list of sync registrations</dfn> whose element type is a <a>sync registration</a>.
+  A <a>service worker registration</a> has an associated <dfn>list of sync registrations</dfn> whose element type is a <a>sync registration</a>. It also has an associated <dfn>list of periodicSync registrations</dfn> whose element type is a <a>periodic sync registration</a>.
 
   A <dfn>sync registration</dfn> is a tuple consisting of a <a>tag</a> and a <a lt="registration state">state</a>.
 
@@ -163,6 +190,18 @@ spec: WebIDL; urlPrefix: https://heycam.github.io/webidl/#
   A <a>sync registration</a> has an associated <a>service worker registration</a>. It is initially set to null.
 
   Within one <a>list of sync registrations</a> each <a>sync registration</a> MUST have a unique <a>tag</a>.
+
+  A <dfn>periodic sync registration</dfn> is a tuple consisting of a <a>tag</a>, a dictionary of <a>options</a>, and a <a lt="registration state">state</a>.
+
+  A <a>periodic sync registration</a> has an associated <a>tag</a>, a DOMString.
+
+  A <a>periodic sync registration</a> has an associated <dfn>options</dfn>, a dictionary containing <dfn>minInterval</dfn>, a long long. <a>minInterval</a> is used to specify the minimum interval, in milliseconds, at which the periodic synchronization should happen.
+
+  A <a>periodic sync registration</a> has an associated <a>registration state</a>, which is one of <a>pending</a>, <a>waiting</a>, <a>firing</a>, or <a>reregisteredWhileFiring</a>. It is initially set to <a>pending</a>.
+
+  A <a>periodic sync registration</a> has an associated <a>service worker registration</a>. It is initially set to null.
+
+  Within one <a>list of periodicSync registrations</a> each <a>periodic sync registration</a> MUST have a unique <a>tag</a>.
 </section>
 
 <section>
