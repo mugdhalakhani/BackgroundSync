@@ -1,0 +1,95 @@
+<pre class='metadata'>
+Title: Web Periodic Background Synchronization
+Status: CG-DRAFT
+ED: https://wicg.github.io/BackgroundSync/spec/PeriodicBackgroundSync-index.bs
+Shortname: periodic-background-sync
+Level: 1
+Editor: Mugdha Lakhani, Google, nator@chromium.org
+Abstract: This specification describes a method that enables web applications to periodically synchronize data and content in the background.
+Group: wicg
+Repository: WICG/BackgroundSync
+Link Defaults: html (dfn) allowed to show a popup/event handler idl attribute/global object/in parallel/incumbent settings object/perform a microtask checkpoint/queue a task/script execution environment
+</pre>
+
+<pre class="anchors">
+spec: html; urlPrefix: https://html.spec.whatwg.org/
+    type: dfn
+        text: trusted; url: concept-events-trusted
+        text: browsing context; url: browsing-context
+
+spec: service-workers; urlPrefix: https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html
+    type: dfn
+        text: active worker; url: dfn-active-worker
+        text: client; url: dfn-service-worker-client
+        text: control; url: dfn-control
+        text: extended lifetime promises; url: dfn-extend-lifetime-promises
+        text: frame type; url: dfn-service-worker-client-frame-type
+        text: handle functional event; url: handle-functional-event-algorithm
+        text: installing worker; url: dfn-installing-worker
+        text: service worker; url: service-worker-concept
+        text: service worker client; url: dfn-service-worker-client
+        text: service worker registration; url: service-worker-registration-concept
+        text: termination; url: terminate-service-worker-algorithm
+        text: waiting worker; url: dfn-waiting-worker
+    type: interface
+        text: ExtendableEvent; url: extendable-event-interface
+        text: ExtendableEventInit; url: extendable-event-init-dictionary
+        text: ServiceWorkerGlobalScope; url: service-worker-global-scope-interface
+        text: ServiceWorkerRegistration; url: service-worker-registration-interface
+</pre>
+
+Introduction {#intro}
+=====================
+
+  <em>This section is non-normative.</em>
+
+  Web Applications often run in environments with unreliable networks (e.g., mobile phones) and unknown lifetimes (the browser might be killed or the user might navigate away). This makes it difficult to synchronize client data from web apps (such as photo uploads, document changes, or composed emails) with servers. It also makes it difficult to synchronize updated content on the servers with the web app. If the browser closes or the user navigates away before synchronization can complete, the app must wait until the user revisits the page to try again. This specification provides a new onperiodicsync [=service worker=] event which can fire [=in the background=] so that synchronization attempts can continue despite adverse conditions when initially requested. This API is intended to reduce the time between content creation and content synchronization between the server and the web app.
+
+  As this API relies on service workers, functionality provided by this API is only available in a [=secure context=].
+  ## Example ## {#example}
+  Requesting a [=periodic Background Sync opportunity=] at a daily frequency from a [=browsing context=]:
+
+  <pre class="lang-js">
+    async function getLatestNews() {
+      const registration = await navigator.serviceWorker.ready;
+      try {
+        await registration.periodicSync.register('get-latest-news', {
+          minInterval: 24 * 60 * 60 * 1000,
+        });
+      } catch (error) {
+        console.log('Periodic Sync could not be registered!');
+      }
+    }
+  </pre>
+
+  Reacting to a periodicsync event within a [=service worker=]:
+
+  <pre class="lang-js">
+    self.addEventListener('periodicsync', event => {
+      event.waitUntil(fetchAndCacheLatestNews());
+    });
+  </pre>
+
+  In the above example <code>fetchAndCacheLatestNews</code> is a developer-defined function.
+
+Concepts {#concepts}
+========================
+
+The periodicsync event is considered to run <dfn>in the background</dfn> if no [=service worker clients=] whose [=frame type=] is top-level or auxiliary exist for the origin of the corresponding service worker registration.
+
+The user agent is considered to be <dfn>online</dfn> if the user agent has established a network connection. A user agent MAY use a stricter definition of being [=online=]. Such a stricter definition MAY take into account the particular [=service worker=] or origin a [=periodicsync registration=] is associated with.
+
+A <dfn>periodic Background Sync opportunity</dfn> allows periodic synchronization between the server and the web app, the exact frequency of which is decided by the user agent. It can be requested via a [=periodicsync registration=].
+
+Constructs {#constructs}
+=========================
+
+A [=service worker registration=] has an associated <dfn>list of periodicsync registrations</dfn> whose element type is a [=periodicsync registration=].
+
+A <dfn>periodicsync registration</dfn> is a tuple consisting of a [=tag=], a dictionary of options, and a [=registration state=].
+
+The <dfn>tag</dfn> is a DOMString. Within one [=list of periodicsync registrations=] each [=periodicsync registration=] MUST have a unique [=tag=].
+
+The options are a dictionary containing [=minInterval=], a long long. <dfn>minInterval</dfn> is used to specify the minimum interval, in milliseconds, at which the periodic synchronization should happen.
+
+The <dfn>registration state</dfn> is one of <dfn>pending</dfn>, <dfn>waiting</dfn>, <dfn>firing</dfn>, or <dfn>reregisteredWhileFiring</dfn>. It is initially set to [=pending=].
