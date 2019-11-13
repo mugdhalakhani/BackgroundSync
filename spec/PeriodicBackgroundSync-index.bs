@@ -10,6 +10,12 @@ Group: wicg
 Repository: WICG/BackgroundSync
 </pre>
 
+<pre class="anchors">
+spec: background-fetch; urlPrefix: https://wicg.github.io/background-fetch/
+    type:interface; text: BackgroundFetchManager;
+    type:dfn; text:background fetch
+</pre>
+
 <pre class=link-defaults>
 spec:html; type:dfn; for:/; text:browsing context
 spec:service-workers; type:dfn; text:frame type
@@ -92,3 +98,15 @@ Fetch requests within the <code>periodicsync</code> event while [=in the backgro
 
 ## History Leaking ## {#history-leaking}
 Fetch requests within the <code>periodicsync</code> event while [=in the background=] may reveal something about the client's navigation history to middleboxes on networks different from the one used to create the [=periodicsync registration=]. For instance, the client might visit site https://example.com, which registers a <code>periodicsync</code> event, but based on the implementation, might not fire until after the user has navigated away from the page and changed networks. Middleboxes on the new network may see the fetch requests that the <code>periodicsync</code> event makes. The fetch requests are HTTPS so the request contents will not be leaked but the domain may be (via DNS lookups and IP address of the request). To prevent this leakage of browsing history, the user agent MAY choose to only fire <code>periodicsync</code> events on the network the [=periodicsync registration=] was made on, with the understanding that it will reduce usability by not allowing synchronization opportunistically.
+
+Resource Usage {#resources}
+============================
+
+<em>This section is non-normative.</em>
+
+A website will most likely download resources from the network when processing a <code>periodicsync</code> event. The underlying operating system may launch the user agent to dispatch these events, and may keep it awake for a pre-defined duration to allow processing of the events. Both cause battery drain.
+The user agent should cap the duration and frequency of these events to limit resource usage by websites when the user has navigated away.
+
+Large resources should be downloaded by registering a [=background fetch=] via the {{BackgroundFetchManager}} interface.
+
+In addition, the user agent should consider other factors such as user engagement with the origin, and any user indications to temporarily reduce data consumption, such as a Data Saving Mode, to adjust the frequency of <code>periodicsync</code> events.
