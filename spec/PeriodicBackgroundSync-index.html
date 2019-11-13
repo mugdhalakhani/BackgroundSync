@@ -1215,7 +1215,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version ee4d7efc3ed6155392d49e10a542e2351fd5792d" name="generator">
   <link href="https://wicg.github.io/BackgroundSync/spec/PeriodicBackgroundSync-index.html" rel="canonical">
-  <meta content="396b26f525bec532b19193da247427f92b038944" name="document-revision">
+  <meta content="735da52a3a90d03cf71b384ec45f6be5fb281b42" name="document-revision">
 <style>/* style-md-lists */
 
 /* This is a weird hack for me not yet following the commonmark spec
@@ -1462,7 +1462,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Web Periodic Background Synchronization</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-11-13">13 November 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-11-18">18 November 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1511,6 +1511,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
       <li><a href="#location-tracking"><span class="secno">4.2</span> <span class="content">Location Tracking</span></a>
       <li><a href="#history-leaking"><span class="secno">4.3</span> <span class="content">History Leaking</span></a>
      </ol>
+    <li><a href="#resources"><span class="secno">5</span> <span class="content">Resource Usage</span></a>
     <li><a href="#conformance"><span class="secno"></span> <span class="content"> Conformance</span></a>
     <li>
      <a href="#index"><span class="secno"></span> <span class="content">Index</span></a>
@@ -1570,6 +1571,12 @@ Enclosing options in a dictionary allows this spec to be extended with more opti
     Fetch requests within the <code>periodicsync</code> event while <a data-link-type="dfn" href="#in-the-background" id="ref-for-in-the-background">in the background</a> may reveal the client’s IP address to the server after the user has left the page. The user agent SHOULD limit tracking by capping the number of retries and duration of <code>periodicsync</code> events, to reduce the amount of time the user’s location can be tracked by the website. Further, the user agent SHOULD limit persistent location tracking by capping the frequency of <code>periodicsync</code> events, both for an origin, and across origins. 
    <h3 class="heading settled" data-level="4.3" id="history-leaking"><span class="secno">4.3. </span><span class="content">History Leaking</span><a class="self-link" href="#history-leaking"></a></h3>
     Fetch requests within the <code>periodicsync</code> event while <a data-link-type="dfn" href="#in-the-background" id="ref-for-in-the-background①">in the background</a> may reveal something about the client’s navigation history to middleboxes on networks different from the one used to create the <a data-link-type="dfn" href="#periodicsync-registration" id="ref-for-periodicsync-registration③">periodicsync registration</a>. For instance, the client might visit site https://example.com, which registers a <code>periodicsync</code> event, but based on the implementation, might not fire until after the user has navigated away from the page and changed networks. Middleboxes on the new network may see the fetch requests that the <code>periodicsync</code> event makes. The fetch requests are HTTPS so the request contents will not be leaked but the domain may be (via DNS lookups and IP address of the request). To prevent this leakage of browsing history, the user agent MAY choose to only fire <code>periodicsync</code> events on the network the <a data-link-type="dfn" href="#periodicsync-registration" id="ref-for-periodicsync-registration④">periodicsync registration</a> was made on, with the understanding that it will reduce usability by not allowing synchronization opportunistically. 
+   <h2 class="heading settled" data-level="5" id="resources"><span class="secno">5. </span><span class="content">Resource Usage</span><a class="self-link" href="#resources"></a></h2>
+   <p><em>This section is non-normative.</em></p>
+   <p>A website will most likely download resources from the network when processing a <code>periodicsync</code> event. The underlying operating system may launch the user agent to dispatch these events, and may keep it awake for a pre-defined duration to allow processing of the events. Both cause battery drain.
+The user agent should cap the duration and frequency of these events to limit resource usage by websites when the user has navigated away.</p>
+   <p>Large resources should be downloaded by registering a <a data-link-type="dfn" href="https://wicg.github.io/background-fetch/#background-fetch" id="ref-for-background-fetch">background fetch</a> via the <code class="idl"><a data-link-type="idl" href="https://wicg.github.io/background-fetch/#backgroundfetchmanager" id="ref-for-backgroundfetchmanager">BackgroundFetchManager</a></code> interface.</p>
+   <p>In addition, the user agent should consider other factors such as user engagement with the origin, and any user indications to temporarily reduce data consumption, such as a Data Saving Mode, to adjust the frequency of <code>periodicsync</code> events.</p>
   </main>
   <div data-fill-with="conformance">
    <h2 class="no-ref no-num heading settled" id="conformance"><span class="content"> Conformance</span><a class="self-link" href="#conformance"></a></h2>
@@ -1732,6 +1739,18 @@ Enclosing options in a dictionary allows this spec to be extended with more opti
    <li><a href="#tag">tag</a><span>, in §3</span>
    <li><a href="#waiting">waiting</a><span>, in §3</span>
   </ul>
+  <aside class="dfn-panel" data-for="term-for-backgroundfetchmanager">
+   <a href="https://wicg.github.io/background-fetch/#backgroundfetchmanager">https://wicg.github.io/background-fetch/#backgroundfetchmanager</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-backgroundfetchmanager">5. Resource Usage</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-background-fetch">
+   <a href="https://wicg.github.io/background-fetch/#background-fetch">https://wicg.github.io/background-fetch/#background-fetch</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-background-fetch">5. Resource Usage</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-browsing-context">
    <a href="https://html.spec.whatwg.org/multipage/browsers.html#browsing-context">https://html.spec.whatwg.org/multipage/browsers.html#browsing-context</a><b>Referenced in:</b>
    <ul>
@@ -1814,6 +1833,12 @@ Enclosing options in a dictionary allows this spec to be extended with more opti
   <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
   <ul class="index">
    <li>
+    <a data-link-type="biblio">[BACKGROUND-FETCH]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="term-for-backgroundfetchmanager" style="color:initial">BackgroundFetchManager</span>
+     <li><span class="dfn-paneled" id="term-for-background-fetch" style="color:initial">background fetch</span>
+    </ul>
+   <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-browsing-context" style="color:initial">browsing context</span>
@@ -1854,6 +1879,8 @@ Enclosing options in a dictionary allows this spec to be extended with more opti
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
   <dl>
+   <dt id="biblio-background-fetch">[BACKGROUND-FETCH]
+   <dd><a href="https://wicg.github.io/background-fetch/">Background Fetch</a>. Living Standard. URL: <a href="https://wicg.github.io/background-fetch/">https://wicg.github.io/background-fetch/</a>
    <dt id="biblio-html">[HTML]
    <dd>Anne van Kesteren; et al. <a href="https://html.spec.whatwg.org/multipage/">HTML Standard</a>. Living Standard. URL: <a href="https://html.spec.whatwg.org/multipage/">https://html.spec.whatwg.org/multipage/</a>
    <dt id="biblio-permissions">[PERMISSIONS]
