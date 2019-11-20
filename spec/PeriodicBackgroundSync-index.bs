@@ -240,6 +240,16 @@ The <code><dfn method for=PeriodicSyncManager title="getTags()">getTags()</dfn><
 1. For each |registration| of |serviceWorkerRegistration|'s [=list of periodicsync registrations=], [=list/append=] |registration|'s [=periodicsync registration/tag] to |currentTags|.
 1. [=Resolve=] |promise| with |currentTags|.
 
+The <code><dfn method for=PeriodicSyncManager title="unregister(tag)">unregister(tag)</dfn></code> method when invoked, MUST return [=a new promise=] <var>promise</var> and [=enqueue the following steps=] to the [=periodicsync processing queue=]:
+1. Let <var>serviceWorkerRegistration</var> be the {{PeriodicSyncManager}}'s associated [=/service worker registration=].
+1. If |serviceWorkerRegistration|’s [=active worker=] is null, [=reject=] |promise| with an {{InvalidStateError}} and abort these steps.
+1. Let <var>currentRegistration</var> be the [=periodicsync registration=] in |serviceWorkerRegistration|'s [=list of periodicsync registrations=] whose [=periodicsync registration/tag=] equals <var>tag</var> if it exists, else null.
+1. If |currentRegistration| is null:
+    1. Resolve |promise|.
+    1. Abort the rest of these steps.
+1. Remove |registration| from |serviceWorkerRegistration|'s [=list of periodicsync registrations=].
+1. Resolve |promise|.
+
 
 ## The <dfn>periodicSync event</dfn> ## {#periodicSync-event}
 <script type="idl">
