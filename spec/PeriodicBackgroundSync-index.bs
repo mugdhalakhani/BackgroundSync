@@ -77,6 +77,7 @@ A <dfn>periodic Background Sync opportunity</dfn> allows periodic synchronizatio
 
 Constructs {#constructs}
 =========================
+The user agent has a <dfn>periodicsync processing queue</dfn> (a [=parallel queue=]), initially the result of [=starting a new parallel queue=].
 
 A [=/service worker registration=] has an associated <dfn>list of periodicsync registrations</dfn> whose element type is a [=periodicsync registration=].
 
@@ -202,7 +203,7 @@ dictionary BackgroundSyncOptions {
 
 A {{PeriodicSyncManager}} has a <dfn attribute for=PeriodicSyncManager>service worker registration</dfn> (a [=/service worker registration=]).
 
-The <code><dfn method for=PeriodicSyncManager title="register(tag, options)">register(|tag|, |options|)</dfn></code> method, when invoked, MUST return [=a new promise=] |promise| and run the following steps [=in parallel=]:
+The <code><dfn method for=PeriodicSyncManager title="register(tag, options)">register(|tag|, |options|)</dfn></code> method, when invoked, MUST return [=a new promise=] |promise| and [=enqueue the following steps=] to the [=periodicsync processing queue=]:
 
 1. Let |serviceWorkerRegistration| be the {{PeriodicSyncManager}}'s associated {{PeriodicSyncManager/service worker registration}}.
 1. If |serviceWorkerRegistration|’s [=active worker=] is null, [=reject=] |promise| with an {{InvalidStateError}} and abort these steps.
@@ -224,3 +225,10 @@ The <code><dfn method for=PeriodicSyncManager title="register(tag, options)">reg
         1. Set |currentRegistration|'s associated [=periodicsync registration/registration state=] to [=pending=].
     1. Else, if |currentRegistration|'s [=registration state=] is [=firing=], set |serviceWorkerRegistration|'s [=registration state=] to [=reregisteredWhileFiring=].
     1. [=Resolve=] |promise|.
+
+The <code><dfn method for=PeriodicSyncManager title="getTags()">getTags()</dfn></code> method when invoked, MUST return [=a new promise=] |promise| and  [=enqueue the following steps=] to the [=periodicsync processing queue=]:
+
+1. Let |serviceWorkerRegistration| be the {{PeriodicSyncManager}}'s associated [=/service worker registration=].
+1. Let |currentTags| be a new [=/list=].
+1. For each |registration| of |serviceWorkerRegistration|'s [=list of periodicsync registrations=], [=list/append=] |registration|'s [=tag=] to |currentTags|.
+1. [=Resolve=] |promise| with |currentTags|.
