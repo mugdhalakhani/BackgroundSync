@@ -1215,7 +1215,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version ee4d7efc3ed6155392d49e10a542e2351fd5792d" name="generator">
   <link href="https://wicg.github.io/BackgroundSync/spec/PeriodicBackgroundSync-index.html" rel="canonical">
-  <meta content="21916ca194a4c880fbce3e025c528f7eb806d6fa" name="document-revision">
+  <meta content="963c5efbe32e20b85447c1320487fb0351d756ff" name="document-revision">
 <style>/* style-md-lists */
 
 /* This is a weird hack for me not yet following the commonmark spec
@@ -1462,7 +1462,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Web Periodic Background Synchronization</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-11-19">19 November 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-11-20">20 November 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1576,6 +1576,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
    <p>The user agent is considered to be <a data-link-type="dfn" href="https://wicg.github.io/BackgroundSync/spec/#online" id="ref-for-online">online</a> if the user agent has established a network connection. A user agent MAY use a stricter definition of being <a data-link-type="dfn" href="https://wicg.github.io/BackgroundSync/spec/#online" id="ref-for-online①">online</a>. Such a stricter definition MAY take into account the particular <a data-link-type="dfn" href="https://w3c.github.io/ServiceWorker/#dfn-service-worker" id="ref-for-dfn-service-worker①">service worker</a> or origin a <a data-link-type="dfn" href="#periodicsync-registration" id="ref-for-periodicsync-registration">periodicsync registration</a> is associated with.</p>
    <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="periodic-background-sync-opportunity">periodic Background Sync opportunity</dfn> allows periodic synchronization between the server and the web app, the exact interval of which is decided by the user agent. This can be requested through <code class="idl"><a data-link-type="idl" href="#dom-periodicsyncmanager-register" id="ref-for-dom-periodicsyncmanager-register">register()</a></code>.</p>
    <h2 class="heading settled" data-level="3" id="constructs"><span class="secno">3. </span><span class="content">Constructs</span><a class="self-link" href="#constructs"></a></h2>
+    The user agent has a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="periodicsync-processing-queue">periodicsync processing queue</dfn> (a <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#parallel-queue" id="ref-for-parallel-queue">parallel queue</a>), initially the result of <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#starting-a-new-parallel-queue" id="ref-for-starting-a-new-parallel-queue">starting a new parallel queue</a>. 
    <p>A <a data-link-type="dfn" href="https://w3c.github.io/ServiceWorker/#dfn-service-worker-registration" id="ref-for-dfn-service-worker-registration">service worker registration</a> has an associated <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="list-of-periodicsync-registrations">list of periodicsync registrations</dfn> whose element type is a <a data-link-type="dfn" href="#periodicsync-registration" id="ref-for-periodicsync-registration①">periodicsync registration</a>.</p>
    <h3 class="heading settled" data-level="3.1" id="periodic-sync-registration"><span class="secno">3.1. </span><span class="content">PeriodicSync Registration</span><a class="self-link" href="#periodic-sync-registration"></a></h3>
     A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="periodicsync-registration">periodicsync registration</dfn> is a tuple consisting of: 
@@ -1686,7 +1687,7 @@ The user agent should cap the duration and frequency of these events to limit re
 <pre class="idl highlight def">[<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed" id="ref-for-Exposed①"><c- g>Exposed</c-></a>=(<c- n>Window</c->,<c- n>Worker</c->)]
 <c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="periodicsyncmanager"><code><c- g>PeriodicSyncManager</c-></code></dfn> {
     <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-periodicsyncmanager-register" id="ref-for-dom-periodicsyncmanager-register①"><c- g>register</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString" id="ref-for-idl-DOMString①"><c- b>DOMString</c-></a> <dfn class="idl-code" data-dfn-for="PeriodicSyncManager/register(tag, options), PeriodicSyncManager/register(tag)" data-dfn-type="argument" data-export id="dom-periodicsyncmanager-register-tag-options-tag"><code><c- g>tag</c-></code><a class="self-link" href="#dom-periodicsyncmanager-register-tag-options-tag"></a></dfn>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-backgroundsyncoptions" id="ref-for-dictdef-backgroundsyncoptions"><c- n>BackgroundSyncOptions</c-></a> <dfn class="idl-code" data-dfn-for="PeriodicSyncManager/register(tag, options), PeriodicSyncManager/register(tag)" data-dfn-type="argument" data-export id="dom-periodicsyncmanager-register-tag-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-periodicsyncmanager-register-tag-options-options"></a></dfn>);
-    <c- b>Promise</c->&lt;<c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString" id="ref-for-idl-DOMString②"><c- b>DOMString</c-></a>>> <dfn class="idl-code" data-dfn-for="PeriodicSyncManager" data-dfn-type="method" data-export data-lt="getTags()" id="dom-periodicsyncmanager-gettags"><code><c- g>getTags</c-></code><a class="self-link" href="#dom-periodicsyncmanager-gettags"></a></dfn>();
+    <c- b>Promise</c->&lt;<c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString" id="ref-for-idl-DOMString②"><c- b>DOMString</c-></a>>> <a class="idl-code" data-link-type="method" href="#dom-periodicsyncmanager-gettags" id="ref-for-dom-periodicsyncmanager-gettags"><c- g>getTags</c-></a>();
     <c- b>Promise</c->&lt;<c- b>void</c->> <dfn class="idl-code" data-dfn-for="PeriodicSyncManager" data-dfn-type="method" data-export data-lt="unregister(tag)" id="dom-periodicsyncmanager-unregister"><code><c- g>unregister</c-></code><a class="self-link" href="#dom-periodicsyncmanager-unregister"></a></dfn>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString" id="ref-for-idl-DOMString③"><c- b>DOMString</c-></a> <dfn class="idl-code" data-dfn-for="PeriodicSyncManager/unregister(tag)" data-dfn-type="argument" data-export id="dom-periodicsyncmanager-unregister-tag-tag"><code><c- g>tag</c-></code><a class="self-link" href="#dom-periodicsyncmanager-unregister-tag-tag"></a></dfn>);
 };
 
@@ -1695,7 +1696,7 @@ The user agent should cap the duration and frequency of these events to limit re
 };
 </pre>
    <p>A <code class="idl"><a data-link-type="idl" href="#periodicsyncmanager" id="ref-for-periodicsyncmanager⑤">PeriodicSyncManager</a></code> has a <dfn class="dfn-paneled idl-code" data-dfn-for="PeriodicSyncManager" data-dfn-type="attribute" data-export id="dom-periodicsyncmanager-service-worker-registration"><code>service worker registration</code></dfn> (a <a data-link-type="dfn" href="https://w3c.github.io/ServiceWorker/#dfn-service-worker-registration" id="ref-for-dfn-service-worker-registration③">service worker registration</a>).</p>
-   <p>The <code><dfn class="dfn-paneled idl-code" data-dfn-for="PeriodicSyncManager" data-dfn-type="method" data-export data-lt="register(tag, options)|register(tag)" id="dom-periodicsyncmanager-register" title="register(tag, options)"><code>register(<var>tag</var>, <var>options</var>)</code></dfn></code> method, when invoked, MUST return <a data-link-type="dfn" href="https://www.w3.org/2001/tag/doc/promises-guide/#a-new-promise" id="ref-for-a-new-promise">a new promise</a> <var>promise</var> and run the following steps <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel">in parallel</a>:</p>
+   <p>The <code><dfn class="dfn-paneled idl-code" data-dfn-for="PeriodicSyncManager" data-dfn-type="method" data-export data-lt="register(tag, options)|register(tag)" id="dom-periodicsyncmanager-register" title="register(tag, options)"><code>register(<var>tag</var>, <var>options</var>)</code></dfn></code> method, when invoked, MUST return <a data-link-type="dfn" href="https://www.w3.org/2001/tag/doc/promises-guide/#a-new-promise" id="ref-for-a-new-promise">a new promise</a> <var>promise</var> and <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#enqueue-the-following-steps" id="ref-for-enqueue-the-following-steps">enqueue the following steps</a> to the <a data-link-type="dfn" href="#periodicsync-processing-queue" id="ref-for-periodicsync-processing-queue">periodicsync processing queue</a>:</p>
    <ol>
     <li data-md>
      <p>Let <var>serviceWorkerRegistration</var> be the <code class="idl"><a data-link-type="idl" href="#periodicsyncmanager" id="ref-for-periodicsyncmanager⑥">PeriodicSyncManager</a></code>'s associated <code class="idl"><a data-link-type="idl" href="#dom-periodicsyncmanager-service-worker-registration" id="ref-for-dom-periodicsyncmanager-service-worker-registration">service worker registration</a></code>.</p>
@@ -1743,6 +1744,17 @@ The user agent should cap the duration and frequency of these events to limit re
       <li data-md>
        <p><a data-link-type="dfn" href="https://www.w3.org/2001/tag/doc/promises-guide/#resolve-promise" id="ref-for-resolve-promise①">Resolve</a> <var>promise</var>.</p>
      </ol>
+   </ol>
+   <p>The <code><dfn class="dfn-paneled idl-code" data-dfn-for="PeriodicSyncManager" data-dfn-type="method" data-export id="dom-periodicsyncmanager-gettags" title="getTags()"><code>getTags()</code></dfn></code> method when invoked, MUST return <a data-link-type="dfn" href="https://www.w3.org/2001/tag/doc/promises-guide/#a-new-promise" id="ref-for-a-new-promise①">a new promise</a> <var>promise</var> and <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#enqueue-the-following-steps" id="ref-for-enqueue-the-following-steps①">enqueue the following steps</a> to the <a data-link-type="dfn" href="#periodicsync-processing-queue" id="ref-for-periodicsync-processing-queue①">periodicsync processing queue</a>:</p>
+   <ol>
+    <li data-md>
+     <p>Let <var>serviceWorkerRegistration</var> be the <code class="idl"><a data-link-type="idl" href="#periodicsyncmanager" id="ref-for-periodicsyncmanager⑦">PeriodicSyncManager</a></code>'s associated <a data-link-type="dfn" href="https://w3c.github.io/ServiceWorker/#dfn-service-worker-registration" id="ref-for-dfn-service-worker-registration④">service worker registration</a>.</p>
+    <li data-md>
+     <p>Let <var>currentTags</var> be a new <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list">list</a>.</p>
+    <li data-md>
+     <p>For each <var>registration</var> of <var>serviceWorkerRegistration</var>’s <a data-link-type="dfn" href="#list-of-periodicsync-registrations" id="ref-for-list-of-periodicsync-registrations③">list of periodicsync registrations</a>, <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-append" id="ref-for-list-append">append</a> <var>registration</var>’s <a data-link-type="dfn" href="#periodicsync-registration-tag" id="ref-for-periodicsync-registration-tag③">tag</a> to <var>currentTags</var>.</p>
+    <li data-md>
+     <p><a data-link-type="dfn" href="https://www.w3.org/2001/tag/doc/promises-guide/#resolve-promise" id="ref-for-resolve-promise②">Resolve</a> <var>promise</var> with <var>currentTags</var>.</p>
    </ol>
   </main>
   <div data-fill-with="conformance">
@@ -1918,6 +1930,7 @@ The user agent should cap the duration and frequency of these events to limit re
    <li><a href="#dom-serviceworkerregistration-periodicsync">periodicSync</a><span>, in §7.2</span>
    <li><a href="#serviceworkerregistration-periodic-sync-manager">periodic sync manager</a><span>, in §7.2</span>
    <li><a href="#periodicsyncmanager">PeriodicSyncManager</a><span>, in §7.3</span>
+   <li><a href="#periodicsync-processing-queue">periodicsync processing queue</a><span>, in §3</span>
    <li><a href="#periodicsync-registration">periodicsync registration</a><span>, in §3.1</span>
    <li><a href="#dom-periodicsyncmanager-register">register(tag)</a><span>, in §7.3</span>
    <li><a href="#dom-periodicsyncmanager-register">register(tag, options)</a><span>, in §7.3</span>
@@ -1965,10 +1978,34 @@ The user agent should cap the duration and frequency of these events to limit re
     <li><a href="#ref-for-browsing-context">1.1. Example</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-in-parallel">
-   <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel">https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-enqueue-the-following-steps">
+   <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#enqueue-the-following-steps">https://html.spec.whatwg.org/multipage/infrastructure.html#enqueue-the-following-steps</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-in-parallel">7.3. PeriodicSyncManager interface</a>
+    <li><a href="#ref-for-enqueue-the-following-steps">7.3. PeriodicSyncManager interface</a> <a href="#ref-for-enqueue-the-following-steps①">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-parallel-queue">
+   <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#parallel-queue">https://html.spec.whatwg.org/multipage/infrastructure.html#parallel-queue</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-parallel-queue">3. Constructs</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-starting-a-new-parallel-queue">
+   <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#starting-a-new-parallel-queue">https://html.spec.whatwg.org/multipage/infrastructure.html#starting-a-new-parallel-queue</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-starting-a-new-parallel-queue">3. Constructs</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-list-append">
+   <a href="https://infra.spec.whatwg.org/#list-append">https://infra.spec.whatwg.org/#list-append</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-list-append">7.3. PeriodicSyncManager interface</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-list">
+   <a href="https://infra.spec.whatwg.org/#list">https://infra.spec.whatwg.org/#list</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-list">7.3. PeriodicSyncManager interface</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dom-permissionstate-granted">
@@ -2002,7 +2039,7 @@ The user agent should cap the duration and frequency of these events to limit re
   <aside class="dfn-panel" data-for="term-for-a-new-promise">
    <a href="https://www.w3.org/2001/tag/doc/promises-guide/#a-new-promise">https://www.w3.org/2001/tag/doc/promises-guide/#a-new-promise</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-a-new-promise">7.3. PeriodicSyncManager interface</a>
+    <li><a href="#ref-for-a-new-promise">7.3. PeriodicSyncManager interface</a> <a href="#ref-for-a-new-promise①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-reject-promise">
@@ -2014,7 +2051,7 @@ The user agent should cap the duration and frequency of these events to limit re
   <aside class="dfn-panel" data-for="term-for-resolve-promise">
    <a href="https://www.w3.org/2001/tag/doc/promises-guide/#resolve-promise">https://www.w3.org/2001/tag/doc/promises-guide/#resolve-promise</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-resolve-promise">7.3. PeriodicSyncManager interface</a> <a href="#ref-for-resolve-promise①">(2)</a>
+    <li><a href="#ref-for-resolve-promise">7.3. PeriodicSyncManager interface</a> <a href="#ref-for-resolve-promise①">(2)</a> <a href="#ref-for-resolve-promise②">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-secure-contexts">
@@ -2078,7 +2115,7 @@ The user agent should cap the duration and frequency of these events to limit re
     <li><a href="#ref-for-dfn-service-worker-registration">3. Constructs</a>
     <li><a href="#ref-for-dfn-service-worker-registration①">3.1. PeriodicSync Registration</a>
     <li><a href="#ref-for-dfn-service-worker-registration②">7.2. Extensions to the ServiceWorkerRegistration interface</a>
-    <li><a href="#ref-for-dfn-service-worker-registration③">7.3. PeriodicSyncManager interface</a>
+    <li><a href="#ref-for-dfn-service-worker-registration③">7.3. PeriodicSyncManager interface</a> <a href="#ref-for-dfn-service-worker-registration④">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-online">
@@ -2143,7 +2180,15 @@ The user agent should cap the duration and frequency of these events to limit re
     <ul>
      <li><span class="dfn-paneled" id="term-for-eventhandler" style="color:initial">EventHandler</span>
      <li><span class="dfn-paneled" id="term-for-browsing-context" style="color:initial">browsing context</span>
-     <li><span class="dfn-paneled" id="term-for-in-parallel" style="color:initial">in parallel</span>
+     <li><span class="dfn-paneled" id="term-for-enqueue-the-following-steps" style="color:initial">enqueue the following steps</span>
+     <li><span class="dfn-paneled" id="term-for-parallel-queue" style="color:initial">parallel queue</span>
+     <li><span class="dfn-paneled" id="term-for-starting-a-new-parallel-queue" style="color:initial">starting a new parallel queue</span>
+    </ul>
+   <li>
+    <a data-link-type="biblio">[INFRA]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="term-for-list-append" style="color:initial">append</span>
+     <li><span class="dfn-paneled" id="term-for-list" style="color:initial">list</span>
     </ul>
    <li>
     <a data-link-type="biblio">[permissions]</a> defines the following terms:
@@ -2203,6 +2248,8 @@ The user agent should cap the duration and frequency of these events to limit re
    <dd>Anne van Kesteren. <a href="https://dom.spec.whatwg.org/">DOM Standard</a>. Living Standard. URL: <a href="https://dom.spec.whatwg.org/">https://dom.spec.whatwg.org/</a>
    <dt id="biblio-html">[HTML]
    <dd>Anne van Kesteren; et al. <a href="https://html.spec.whatwg.org/multipage/">HTML Standard</a>. Living Standard. URL: <a href="https://html.spec.whatwg.org/multipage/">https://html.spec.whatwg.org/multipage/</a>
+   <dt id="biblio-infra">[INFRA]
+   <dd>Anne van Kesteren; Domenic Denicola. <a href="https://infra.spec.whatwg.org/">Infra Standard</a>. Living Standard. URL: <a href="https://infra.spec.whatwg.org/">https://infra.spec.whatwg.org/</a>
    <dt id="biblio-permissions">[PERMISSIONS]
    <dd>Mounir Lamouri; Marcos Caceres; Jeffrey Yasskin. <a href="https://www.w3.org/TR/permissions/">Permissions</a>. 25 September 2017. WD. URL: <a href="https://www.w3.org/TR/permissions/">https://www.w3.org/TR/permissions/</a>
    <dt id="biblio-promises-guide">[PROMISES-GUIDE]
@@ -2231,7 +2278,7 @@ The user agent should cap the duration and frequency of these events to limit re
 [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed" id="ref-for-Exposed①①"><c- g>Exposed</c-></a>=(<c- n>Window</c->,<c- n>Worker</c->)]
 <c- b>interface</c-> <a href="#periodicsyncmanager"><code><c- g>PeriodicSyncManager</c-></code></a> {
     <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-periodicsyncmanager-register" id="ref-for-dom-periodicsyncmanager-register①①"><c- g>register</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString" id="ref-for-idl-DOMString①①"><c- b>DOMString</c-></a> <a href="#dom-periodicsyncmanager-register-tag-options-tag"><code><c- g>tag</c-></code></a>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-backgroundsyncoptions" id="ref-for-dictdef-backgroundsyncoptions①"><c- n>BackgroundSyncOptions</c-></a> <a href="#dom-periodicsyncmanager-register-tag-options-options"><code><c- g>options</c-></code></a>);
-    <c- b>Promise</c->&lt;<c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString" id="ref-for-idl-DOMString②①"><c- b>DOMString</c-></a>>> <a href="#dom-periodicsyncmanager-gettags"><code><c- g>getTags</c-></code></a>();
+    <c- b>Promise</c->&lt;<c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString" id="ref-for-idl-DOMString②①"><c- b>DOMString</c-></a>>> <a class="idl-code" data-link-type="method" href="#dom-periodicsyncmanager-gettags" id="ref-for-dom-periodicsyncmanager-gettags①"><c- g>getTags</c-></a>();
     <c- b>Promise</c->&lt;<c- b>void</c->> <a href="#dom-periodicsyncmanager-unregister"><code><c- g>unregister</c-></code></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString" id="ref-for-idl-DOMString③①"><c- b>DOMString</c-></a> <a href="#dom-periodicsyncmanager-unregister-tag-tag"><code><c- g>tag</c-></code></a>);
 };
 
@@ -2253,11 +2300,17 @@ The user agent should cap the duration and frequency of these events to limit re
     <li><a href="#ref-for-periodic-background-sync-opportunity">1.1. Example</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="periodicsync-processing-queue">
+   <b><a href="#periodicsync-processing-queue">#periodicsync-processing-queue</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-periodicsync-processing-queue">7.3. PeriodicSyncManager interface</a> <a href="#ref-for-periodicsync-processing-queue①">(2)</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="list-of-periodicsync-registrations">
    <b><a href="#list-of-periodicsync-registrations">#list-of-periodicsync-registrations</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-list-of-periodicsync-registrations">3.1. PeriodicSync Registration</a>
-    <li><a href="#ref-for-list-of-periodicsync-registrations①">7.3. PeriodicSyncManager interface</a> <a href="#ref-for-list-of-periodicsync-registrations②">(2)</a>
+    <li><a href="#ref-for-list-of-periodicsync-registrations①">7.3. PeriodicSyncManager interface</a> <a href="#ref-for-list-of-periodicsync-registrations②">(2)</a> <a href="#ref-for-list-of-periodicsync-registrations③">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="periodicsync-registration">
@@ -2283,7 +2336,7 @@ The user agent should cap the duration and frequency of these events to limit re
    <b><a href="#periodicsync-registration-tag">#periodicsync-registration-tag</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-periodicsync-registration-tag">3.1. PeriodicSync Registration</a>
-    <li><a href="#ref-for-periodicsync-registration-tag①">7.3. PeriodicSyncManager interface</a> <a href="#ref-for-periodicsync-registration-tag②">(2)</a>
+    <li><a href="#ref-for-periodicsync-registration-tag①">7.3. PeriodicSyncManager interface</a> <a href="#ref-for-periodicsync-registration-tag②">(2)</a> <a href="#ref-for-periodicsync-registration-tag③">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="periodicsync-registration-options">
@@ -2391,7 +2444,7 @@ The user agent should cap the duration and frequency of these events to limit re
    <ul>
     <li><a href="#ref-for-periodicsyncmanager">3.1. PeriodicSync Registration</a>
     <li><a href="#ref-for-periodicsyncmanager①">7.2. Extensions to the ServiceWorkerRegistration interface</a> <a href="#ref-for-periodicsyncmanager②">(2)</a> <a href="#ref-for-periodicsyncmanager③">(3)</a>
-    <li><a href="#ref-for-periodicsyncmanager④">7.3. PeriodicSyncManager interface</a> <a href="#ref-for-periodicsyncmanager⑤">(2)</a> <a href="#ref-for-periodicsyncmanager⑥">(3)</a>
+    <li><a href="#ref-for-periodicsyncmanager④">7.3. PeriodicSyncManager interface</a> <a href="#ref-for-periodicsyncmanager⑤">(2)</a> <a href="#ref-for-periodicsyncmanager⑥">(3)</a> <a href="#ref-for-periodicsyncmanager⑦">(4)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dictdef-backgroundsyncoptions">
@@ -2411,6 +2464,12 @@ The user agent should cap the duration and frequency of these events to limit re
    <ul>
     <li><a href="#ref-for-dom-periodicsyncmanager-register">2. Concepts</a>
     <li><a href="#ref-for-dom-periodicsyncmanager-register①">7.3. PeriodicSyncManager interface</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-periodicsyncmanager-gettags">
+   <b><a href="#dom-periodicsyncmanager-gettags">#dom-periodicsyncmanager-gettags</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-periodicsyncmanager-gettags">7.3. PeriodicSyncManager interface</a>
    </ul>
   </aside>
 <script>/* script-dfn-panel */
